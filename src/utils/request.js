@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const instance = axios.create({
-  baseURL: '',
+  baseURL: 'http://geek.itheima.net',
 })
 
 instance.interceptors.request.use(
@@ -15,7 +15,7 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (response) => {
-    return response
+    return response.data.data
   },
   (error) => {
     return Promise.reject(error)
