@@ -7,17 +7,21 @@ import { useDispatch } from 'react-redux'
 import { login } from '@/store/actions/login'
 import { message } from 'antd'
 import { useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 
 const Login = () => {
   const dispatch = useDispatch()
   const history = useHistory()
+  const location = useLocation()
   const [loading, setLoading] = useState(false)
   const onFinish = async (values) => {
     setLoading(true)
     try {
       await dispatch(login(values))
-      message.success('登录成功', 1, () => history.push('/layout'))
+      message.success('登录成功', 1, () => {
+        const from = location.state ? location.state.from : '/layout'
+        history.replace(from)
+      })
     } catch (error) {
       message.error(error?.response?.data?.message, 1, () => setLoading(false))
       Promise.reject(error)

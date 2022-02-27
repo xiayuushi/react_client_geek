@@ -1,0 +1,48 @@
+.root {
+  height: 100%;
+
+  :global {
+    .header {
+      .logo {
+        float: left;
+        width: 120px;
+        height: 31px;
+        margin: 16px 24px 16px 0;
+        background: url('~@/assets/logo.png') no-repeat center / 200px 60px;
+      }
+
+      .profile {
+        position: absolute;
+        right: 20px;
+        color: #fff;
+        font-weight: 400;
+
+        span {
+          margin-left: 10px;
+          cursor: pointer;
+        }
+      }
+
+    }
+
+    .site-layout-background {
+      height: 100%;
+      background-color: #fff;
+    }
+
+    .ant-layout {
+      height: 100%;
+    }
+
+  }
+}
+
+// css-modules最佳实践：（只对组件根元素使用css-modules来重新生成类样式，而子元素或者后代元素样式采用:global{}来包裹）
+// st1、新建样式文件 [name].module.scss
+// st2、在 [name].module.scss 中为组件根元素定义一个样式类名 例如 .root { ... }
+// st3、在 [name].module.scss 中为组件根元素的子级使用 :global{ } 定义其他样式类名 例如 .root { :global{ .xxx{  } } }
+// st4、在组件中引入 [name].module.scss并使用对象接收 例如 import styles from 'xxx.module.scss'
+// st5、在组件的根元素上通过styles对象使用类名 例如 <div className={styles['root']}></div>
+// st6、在组件的根元素的子级元素上直接使用类名 例如 <div className='xxx'></div>
+// 总之，只对组件的根元素容器使用css-modules来重新生成带哈希值的类
+// 后续的子元素自然就划分为到其内部，这样子避免对每一个子元素都添加 style['xxx']可以节省大量的工作

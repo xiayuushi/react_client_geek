@@ -1,6 +1,6 @@
 import request from '@/utils/request'
-import { LOGIN } from '../contants/actionType'
-import { setToken } from '@/utils/storage'
+import { LOGIN, LOGIN_LOGOUT } from '../contants/actionType'
+import { setToken, removeToken } from '@/utils/storage'
 
 export const login = (data) => {
   return async (dispatch) => {
@@ -14,5 +14,12 @@ export const login = (data) => {
       type: LOGIN,
       payload: res,
     })
+  }
+}
+
+export const logout = () => {
+  removeToken()
+  return {
+    type: LOGIN_LOGOUT,
   }
 }

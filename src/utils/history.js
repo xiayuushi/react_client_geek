@@ -1,48 +1,8 @@
-import axios from 'axios'
-import { getToken } from '@/utils/storage'
-import { message } from 'antd'
-import store from '@/store'
-import { logout } from '@/store/actions/login'
-import history from '@/utils/history'
+import { createBrowserHistory } from 'history'
 
-const instance = axios.create({
-  baseURL: 'http://geek.itheima.net',
-})
+const history = createBrowserHistory()
 
-instance.interceptors.request.use(
-  (config) => {
-    const token = getToken()
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
-    }
-    return config
-  },
-  (error) => {
-    return Promise.reject(error)
-  }
-)
-
-instance.interceptors.response.use(
-  (response) => {
-    return response.data.data
-  },
-  (error) => {
-    if (error?.response?.status === 401) {
-      console.log(history.location.state.from)
-      message.error('登录信息过期')
-      store.dispatch(logout())
-      history.replace({
-        to: '/login',
-        state: {
-          from: history.location.pathname,
-        },
-      })
-    }
-    return Promise.reject(error)
-  }
-)
-
-export default instance
+export default history
 
 // 01、非组件中无法直接使用react-router-dom的history对象
 // 02、非函数组件中无法使用hook，因此此处用户登录过期报错401时，必须使用store.dispatch()，而不能使用useDispatch
@@ -69,13 +29,3 @@ export default instance
 
 // N5、将项目中原先从react-router-dom导入使用的BrowserRouter或者HashRouter改成无history对象的Router后，必须自己传入history对象，否则会报错
 // N5、此处提到的改，指的并非是将BrowserRouter或者HashRouter的组件名通过as的方式改写成Router，而是指直接从react-router-dom中将导出不直接带history的Router组件
-
-// N6、响应拦截器中也应该记录回跳地址（非组件中可以通过传递给Router的history属性的history对象拿到location.patnname）
-// N6、响应拦截器在也应该将原先history.push()改成history.replace()
-
-// N7、react-router-dom中路由跳转的两个方法history.push()与history.replace()的区别
-// 1、history.push()会产生历史记录，即，将跳转到目标页面时，会把当前页所在路径加入历史记录，导致回跳时会经过当前页
-// 2、history.replace()不会产生历史记录，是替换操作，即，将跳转到目标页面时，不会把当前页所在路径加入历史记录，常用于做登录回跳
-// -、例如如下场景：当访问layout时登录信息过期被响应拦截器拦截到 login页重新登录时
-// 1、使用history.push('/login') 则历史路径为 layout --> login --> layout，回退时会退到login页面
-// 2、使用history.replace('/login') 则历史路径为 layout --> layout，回退时会退到layout页面

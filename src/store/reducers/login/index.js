@@ -1,4 +1,4 @@
-import { LOGIN } from '../../contants/actionType'
+import { LOGIN, LOGIN_LOGOUT } from '../../contants/actionType'
 
 const initState = {
   token: '',
@@ -11,6 +11,13 @@ const loginReducer = (state = initState, action) => {
       ...state,
       token: action.payload.token,
       refresh_token: action.payload.refresh_token,
+    }
+  }
+  if (action.type === LOGIN_LOGOUT) {
+    return {
+      ...state,
+      token: '',
+      refresh_token: '',
     }
   }
   return state
