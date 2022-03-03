@@ -1,4 +1,4 @@
-import { Layout, Menu, Breadcrumb, Popconfirm, message } from 'antd'
+import { Layout, Menu, Popconfirm, message } from 'antd'
 import {
   LogoutOutlined,
   HomeOutlined,
@@ -14,9 +14,8 @@ import { user_getUserInfo } from '@/store/actions/user'
 import { logout } from '@/store/actions/login'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import AuthRoute from '@/components/AuthRoute'
 
-const { Header, Content, Sider } = Layout
+const { Header, Sider } = Layout
 
 const LayoutComponent = () => {
   const { pathname } = useLocation()
@@ -64,35 +63,20 @@ const LayoutComponent = () => {
               <Menu.Item key="/layout" icon={<HomeOutlined />}>
                 <Link to="/layout">数据概览</Link>
               </Menu.Item>
-              <Menu.Item key="/layout/publish" icon={<HddOutlined />}>
-                <Link to="/layout/publish">内容管理</Link>
+              <Menu.Item key="/layout/article" icon={<HddOutlined />}>
+                <Link to="/layout/article">文章管理</Link>
               </Menu.Item>
-              <Menu.Item key="/layout/article" icon={<EditOutlined />}>
-                <Link to="/layout/article">发布文章</Link>
+              <Menu.Item key="/layout/publish" icon={<EditOutlined />}>
+                <Link to="/layout/publish">发布文章</Link>
               </Menu.Item>
             </Menu>
           </Sider>
           <Layout style={{ padding: '24px' }}>
-            <Content
-              className="site-layout-background"
-              style={{
-                padding: 24,
-                margin: 0,
-                minHeight: 280,
-              }}
-            >
-              <Breadcrumb style={{ margin: '16px 0' }}>
-                <Breadcrumb.Item>Home</Breadcrumb.Item>
-                <Breadcrumb.Item>List</Breadcrumb.Item>
-                <Breadcrumb.Item>App</Breadcrumb.Item>
-              </Breadcrumb>
-              <Switch>
-                <Route exact path="/layout" component={Home} />
-                <Route path="/layout/publish" component={Publish} />
-                {/* <Route path="/layout/article" component={Article} /> */}
-                <AuthRoute path="/layout/article" component={Article} />
-              </Switch>
-            </Content>
+            <Switch>
+              <Route exact path="/layout" component={Home} />
+              <Route path="/layout/article" component={Article} />
+              <Route path="/layout/publish" component={Publish} />
+            </Switch>
           </Layout>
         </Layout>
       </Layout>

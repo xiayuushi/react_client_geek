@@ -5,6 +5,8 @@ import Login from '@/pages/Login'
 import Layout from '@/pages/Layout'
 import NotFound from '@/pages/NotFound'
 
+import AuthRoute from '@/components/AuthRoute'
+
 const App = () => {
   return (
     <Router history={history}>
@@ -16,7 +18,7 @@ const App = () => {
             render={() => <Redirect to="/layout"></Redirect>}
           />
           <Route path="/login" component={Login} />
-          <Route path="/layout" component={Layout} />
+          <AuthRoute path="/layout" component={Layout} />
           <Route component={NotFound} />
         </Switch>
       </div>
