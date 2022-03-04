@@ -71,7 +71,7 @@ const LayoutComponent = () => {
               </Menu.Item>
             </Menu>
           </Sider>
-          <Layout style={{ padding: '24px' }}>
+          <Layout style={{ padding: '24px', overflow: 'auto' }}>
             <Switch>
               <Route exact path="/layout" component={Home} />
               <Route path="/layout/article" component={Article} />

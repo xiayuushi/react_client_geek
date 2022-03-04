@@ -6,7 +6,7 @@ import { logout } from '@/store/actions/login'
 import history from '@/utils/history'
 
 const instance = axios.create({
-  baseURL: 'http://geek.itheima.net',
+  baseURL: process.env.REACT_APP_URL,
 })
 
 instance.interceptors.request.use(

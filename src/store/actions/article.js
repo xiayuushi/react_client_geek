@@ -34,3 +34,15 @@ export const delArticle = (id) => {
     // 因此此处删除文章时也就无需去store定义actionType以及reducer了
   }
 }
+
+export const addArticle = ({ draft = false, data }) => {
+  // 传入draft=true则走存入草稿接口，否则则为发布文章接口
+  return async () => {
+    await request({
+      url: '/v1_0/mp/articles',
+      method: 'post',
+      params: { draft },
+      data,
+    })
+  }
+}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import {
   Card,
   Breadcrumb,
@@ -207,9 +207,10 @@ const Article = () => {
 
 export default Article
 
-// 01、antd的Button设置htmlType='submit'可以配合antd的Form组件onFinish事件进行提交表单（Form.Item必须设置name）
-// 02、上面表单筛选状态与下方表格的状态应该相互关联，因此应该定义一份数据STATUS让两者协同，上面表单Radio状态与下方表格columns.status中render函数的关联起来
-// 03、useState()生成的state其实就处于闭包环境中，因此组件渲染时上一次的闭包及对应的状态在闭包调用完毕后会被回收且生成新的闭包
+// 01、antd的Button设置htmlType='submit'可以配合antd的Form组件onFinish事件进行提交表单（Form.Item必须设置name，name值应该与接口文档的字段名保持一致）
+// 02、使用antd的Form表单（onFinish）+Button组件（htmlType='submit'），非自定义组件则无需进行受控，自定义组件则只需嵌套于Form.Item内自动会有value与onChange属性（也无需手动受控）
+// 03、上面表单筛选状态与下方表格的状态应该相互关联，因此应该定义一份数据STATUS让两者协同，上面表单Radio状态与下方表格columns.status中render函数的关联起来
+// 04、useState()生成的state其实就处于闭包环境中，因此组件渲染时上一次的闭包及对应的状态在闭包调用完毕后会被回收且生成新的闭包
 // 04、useState()生成的状态因闭包的存在每次都在各自闭包环境中存在，涉及异步时不能确保 是同一个阶段的state
 
 // 05、如何确保闭包中的状态是同一个？
