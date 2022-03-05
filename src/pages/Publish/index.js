@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { useState, useRef, useEffect } from 'react'
+import { Link, useHistory, useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import {
   Card,
@@ -12,6 +12,7 @@ import {
   Upload,
   Modal,
   Image,
+  message,
 } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import styles from './index.module.scss'
@@ -19,11 +20,35 @@ import styles from './index.module.scss'
 import ChannelSelect from '@/components/ChannelSelect'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-import { addArticle } from '@/store/actions/article'
+import {
+  addArticle,
+  editArticle,
+  getArticleInfo,
+} from '@/store/actions/article'
 
 const Publish = () => {
   const history = useHistory()
   const dispatch = useDispatch()
+
+  const { id } = useParams()
+  useEffect(() => {
+    if (!id) return
+    dispatch(getArticleInfo(id)).then((res) => {
+      formRef.current.setFieldsValue({
+        ...res,
+        type: res.cover.type,
+      })
+      setType(res.cover.type)
+      const list = res.cover.images.map((item) => {
+        return {
+          url: item,
+        }
+      })
+      setFileList(list)
+      fileRef.current = list
+    })
+  }, [id, dispatch])
+
   const add = async ({ draft, values }) => {
     const images = fileList.map((item) => {
       if (item.url) {
@@ -40,14 +65,19 @@ const Publish = () => {
         images,
       },
     }
-    await dispatch(addArticle({ draft, data }))
+    id
+      ? await dispatch(editArticle({ draft, data: { ...data, id } }))
+      : await dispatch(addArticle({ draft, data }))
   }
 
+  // 编辑或者新增文章
   const onFinish = async (values) => {
     add({ values })
+    message.success('操作成功')
     history.replace('/layout/article')
   }
 
+  // 将编辑的或者新增的文章存入草稿
   const Draft = async () => {
     const values = await formRef.current.getFieldsValue()
     add({ values, draft: true })
@@ -88,7 +118,7 @@ const Publish = () => {
             <Breadcrumb.Item>
               <Link to="/layout">首页</Link>
             </Breadcrumb.Item>
-            <Breadcrumb.Item>当前页</Breadcrumb.Item>
+            <Breadcrumb.Item>{id ? '编辑' : '发布'}文章</Breadcrumb.Item>
           </Breadcrumb>
         }
       >
@@ -177,7 +207,7 @@ const Publish = () => {
           <Form.Item wrapperCol={{ offset: 4 }}>
             <Space>
               <Button type="primary" htmlType="submit">
-                发布文章
+                {id ? '编辑' : '发布'}文章
               </Button>
               <Button onClick={Draft}>存入草稿</Button>
             </Space>
@@ -232,6 +262,8 @@ export default Publish
 // 09、antd的Form组件的规则验证触发：
 // 09、方式1、通过Button按钮设置htmlType="submit"是在点击提交按钮时触发的全局验证
 // 09、方式2、通过事件内手动调用Form组件的validateFields(['验证字段'])方法进行验证，可以根据传入的验证字段进行相应的触发验证
+// 10、setFieldsValue()是Form组件实例的方法，用于设置表单数据回显（编辑表单操作，拿到服务器的数据或者存放于redux的数据设置给Form表单）
+// 11、type与图片上传的数据回显，必须额外处理，虽然处理type时并未使用Form组件
 
 // 关于antd的Upload组件（文件上传）
 // 01、必须设置action属性，该属性用于设置上传的地址（非axios发请求地址，因此必须写全写完整的上传地址）
@@ -242,3 +274,7 @@ export default Publish
 
 // useRef()返回的对象是不会发生变化的，但它的current属性是可变的
 // 因此，可以用该hooks突破组件闭包限制，在同一组件中确保修改的是同一个数据
+
+// N1、不要直接对useEffect的回调使用async
+// N1、方式1 要么直接在回调内再声明一个函数使用async关键字，再去调用函数；
+// N1、方式2 要么直接使用promise.then()不使用async关键字

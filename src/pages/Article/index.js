@@ -15,7 +15,7 @@ import {
   message,
 } from 'antd'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   getChannelsList,
@@ -32,6 +32,7 @@ const STATUS = [
   { value: 3, name: '审核失败', color: '#f00' },
 ]
 const Article = () => {
+  const history = useHistory()
   const paramsRef = useRef({})
   const dispatch = useDispatch()
   const { article } = useSelector((state) => state)
@@ -121,7 +122,11 @@ const Article = () => {
       render: (id) => {
         return (
           <Space>
-            <Button type="primary" icon={<EditOutlined />}></Button>
+            <Button
+              type="primary"
+              icon={<EditOutlined />}
+              onClick={() => history.push(`/layout/publish/${id}`)}
+            ></Button>
             <Popconfirm
               title="是否删除当前文章?"
               onConfirm={() => delCurrentArticle(id)}

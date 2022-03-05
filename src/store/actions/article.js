@@ -46,3 +46,25 @@ export const addArticle = ({ draft = false, data }) => {
     })
   }
 }
+
+export const editArticle = ({ draft = false, data }) => {
+  return async () => {
+    await request({
+      url: `/v1_0/mp/articles/${data.id}`,
+      method: 'put',
+      params: { draft },
+      data,
+    })
+  }
+}
+
+export const getArticleInfo = (id) => {
+  // getArticleInfo获取单篇文章的详情
+  // 只在编辑文章一个地方使用到，因此无需存储于redux中，因此此处直接返回使用，而并未通过dispatch提交到reducer去处理
+  return async () => {
+    const res = await request({
+      url: `/v1_0/mp/articles/${id}`,
+    })
+    return res
+  }
+}
