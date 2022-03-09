@@ -4,6 +4,11 @@ import thunk from 'redux-thunk'
 import rootReducer from './reducers'
 import { getToken } from '@/utils/storage'
 
+let middlewares
+process.env.NODE_ENV === 'development'
+  ? (middlewares = composeWithDevTools(applyMiddleware(thunk)))
+  : (middlewares = applyMiddleware(thunk))
+
 const store = createStore(
   rootReducer,
   {
@@ -11,7 +16,7 @@ const store = createStore(
       token: getToken(),
     },
   },
-  composeWithDevTools(applyMiddleware(thunk))
+  middlewares
 )
 
 export default store
@@ -22,3 +27,6 @@ export default store
 // 参数3 需要使用到的redux中间件，是一个可选值（当不设置store读取的默认state状态时，中间件也可以作为第二参数）
 // 如果需要读取默认状态，则参数2可以当成是参数1的解构，需要默认读取哪个reducer的状态，就解构出哪个reducer模块
 // 默认读取的state是否设置成功，可以在浏览器redux选项卡的@@INIT中查看state
+
+// N1、应根据环境变量来配置redux开发者工具
+// --、上线后不再需要redux开发者工具查看状态，因此可以根据环境变量来配置上线后移除开发者工具的配置项

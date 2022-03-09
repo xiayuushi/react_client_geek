@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import ReactDOM from 'react-dom'
 import 'antd/dist/antd.css'
 import './index.scss'
@@ -13,7 +14,9 @@ import locale from 'antd/lib/locale/zh_CN'
 ReactDOM.render(
   <Provider store={store}>
     <ConfigProvider locale={locale}>
-      <App />
+      <Suspense fallback={<div>加载中...</div>}>
+        <App />
+      </Suspense>
     </ConfigProvider>
   </Provider>,
   document.getElementById('root')

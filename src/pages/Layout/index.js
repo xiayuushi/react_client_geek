@@ -1,3 +1,4 @@
+import { lazy } from 'react'
 import { Layout, Menu, Popconfirm, message } from 'antd'
 import {
   LogoutOutlined,
@@ -7,9 +8,14 @@ import {
 } from '@ant-design/icons'
 import { Switch, Route, Link, useLocation, useHistory } from 'react-router-dom'
 import styles from './index.module.scss'
-import Home from '../Home'
-import Article from '../Article'
-import Publish from '../Publish'
+
+// import Home from '../Home'
+// import Article from '../Article'
+// import Publish from '../Publish'
+const Home = lazy(() => import('../Home'))
+const Article = lazy(() => import('../Article'))
+const Publish = lazy(() => import('../Publish'))
+
 import { user_getUserInfo } from '@/store/actions/user'
 import { logout } from '@/store/actions/login'
 import { useEffect } from 'react'
